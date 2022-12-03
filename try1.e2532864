@@ -1,0 +1,2 @@
+/var/spool/gridengine/execd/gpu1905/job_scripts/2532864: line 12: /course/cs1430/tf_gpu/bin/activate: No such file or directory
+/var/spool/gridengine/execd/gpu1905/job_scripts/2532864: line 30: python: command not found

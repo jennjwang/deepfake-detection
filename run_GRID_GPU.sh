@@ -19,7 +19,7 @@
 # cd /home/ewang96/CS1430/DeepFake-Detect
 # cd /home/ewang96/miniconda3/envs/tf_gpu
 # pwd
-cd /home/ewang96/CS1430/DeepFake-Detect
+cd /home/ewang96/CS1430/CVFinal
 
 source /home/ewang96/miniconda3/bin/activate tf_gpu
 # eval "$(conda shell.bash hook)"

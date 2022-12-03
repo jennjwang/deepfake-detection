@@ -26,13 +26,18 @@ for filename in metadata.keys():
     tmp_path = os.path.join(base_path, get_filename_only(filename))
     print('Processing Directory: ' + tmp_path)
     frame_images = [x for x in os.listdir(tmp_path) if os.path.isfile(os.path.join(tmp_path, x))]
+    filtered = []
+    for an_img in frame_images:
+        if an_img[0] != '.':
+            filtered.append(an_img)
     faces_path = os.path.join(tmp_path, 'faces')
     print('Creating Directory: ' + faces_path)
     os.makedirs(faces_path, exist_ok=True)
     print('Cropping Faces from Images...')
     print(frame_images)
+    print(filtered)
 
-    for frame in frame_images:
+    for frame in filtered:
         print('Processing ', frame)
         detector = MTCNN()
         print(tmp_path)

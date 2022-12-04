@@ -8,6 +8,7 @@ import pandas as pd
 import tensorflow as tf
 from tensorflow.keras import backend as K
 print('TensorFlow version: ', tf.__version__)
+os.environ["XLA_FLAGS"]="--xla_gpu_cuda_data_dir=/usr/lib/cuda"
 
 # Set to force CPU
 #os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
@@ -16,9 +17,9 @@ print('TensorFlow version: ', tf.__version__)
 #else:
 #    print("No GPU found")
 
-dataset_path = '.\\split_dataset\\'
+dataset_path = './/split_dataset//'
 
-tmp_debug_path = '.\\tmp_debug'
+tmp_debug_path = './/tmp_debug'
 print('Creating Directory: ' + tmp_debug_path)
 os.makedirs(tmp_debug_path, exist_ok=True)
 
@@ -110,7 +111,7 @@ model.summary()
 # Compile model
 model.compile(optimizer = Adam(lr=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
 
-checkpoint_filepath = '.\\tmp_checkpoint'
+checkpoint_filepath = './/tmp_checkpoint'
 print('Creating Directory: ' + checkpoint_filepath)
 os.makedirs(checkpoint_filepath, exist_ok=True)
 
@@ -131,8 +132,8 @@ custom_callbacks = [
 ]
 
 # Train network
-num_epochs = 20
-history = model.fit_generator(
+num_epochs = 10
+history = model.fit(
     train_generator,
     epochs = num_epochs,
     steps_per_epoch = len(train_generator),
@@ -140,14 +141,14 @@ history = model.fit_generator(
     validation_steps = len(val_generator),
     callbacks = custom_callbacks
 )
+print("printing history: \n")
 print(history.history)
 
-'''
 # Plot results
 import matplotlib.pyplot as plt
 
-acc = history.history['acc']
-val_acc = history.history['val_acc']
+acc = history.history['accuracy']
+val_acc = history.history['val_accuracy']
 loss = history.history['loss']
 val_loss = history.history['val_loss']
 
@@ -157,15 +158,16 @@ plt.plot(epochs, acc, 'bo', label = 'Training Accuracy')
 plt.plot(epochs, val_acc, 'b', label = 'Validation Accuracy')
 plt.title('Training and Validation Accuracy')
 plt.legend()
-plt.figure()
+plt.savefig("/home/ewang96/CS1430/CVFinal/result1acc.png")
+plt.clf()
 
 plt.plot(epochs, loss, 'bo', label = 'Training loss')
 plt.plot(epochs, val_loss, 'b', label = 'Validation Loss')
 plt.title('Training and Validation Loss')
 plt.legend()
+plt.savefig("/home/ewang96/CS1430/CVFinal/result1.png")
 
-plt.show()
-'''
+# plt.show()
 
 # load the saved model that is considered the best
 best_model = load_model(os.path.join(checkpoint_filepath, 'best_model.h5'))

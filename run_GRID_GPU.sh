@@ -22,6 +22,8 @@
 cd /home/ewang96/CS1430/CVFinal
 
 source /home/ewang96/miniconda3/bin/activate tf_gpu
+# pip install -r requirements.txt --user
+
 # eval "$(conda shell.bash hook)"
 # source activate tf_gpu
 FILE=$1

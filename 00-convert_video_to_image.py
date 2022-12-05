@@ -55,3 +55,5 @@ for filename in metadata.keys():
         print("Done!")
     else:
         continue
+
+print("Completely finished!")

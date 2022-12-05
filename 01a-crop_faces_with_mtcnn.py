@@ -1,15 +1,19 @@
 import cv2
 from mtcnn import MTCNN
-import sys, os.path
+import sys, os, os.path
 import json
 from keras import backend as K
 import tensorflow as tf
+import logging
 print(tf.__version__)
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 physical_devices = tf.config.list_physical_devices('GPU')
 print(physical_devices)
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
+
+# os.environ["LD_LIBRARY_PATH"]="/home/ewang96/.local/lib/python3.9/site-packages/tensorrt/"
 
 base_path = './/train_sample_videos//'
 
@@ -74,4 +78,7 @@ for filename in metadata.keys():
                 cv2.imwrite(new_filename, cv2.cvtColor(crop_image, cv2.COLOR_RGB2BGR))
             else:
                 print('Skipped a face..')
+
+print("Completely finished!")
+logging.warning("Completely finished!")
     

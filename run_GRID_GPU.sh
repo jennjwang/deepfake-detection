@@ -40,6 +40,10 @@ export TENSORPACK_PIPEDIR=/ltmp/
 # If you need to compile any CUDA kernels do it on the local FS 
 # so it happens faster
 export CUDA_CACHE_PATH=/ltmp/
+
+export LD_LIBRARY_PATH="/home/ewang96/.local/lib/python3.9/site-packages/tensorrt/"
+
+export TF_ENABLE_ONEDNN_OPTS=1
 # Runs the python file passing all args and pipes n into the file. 
 # -u tells python to not buffer the output to so it is printed
 # more often.

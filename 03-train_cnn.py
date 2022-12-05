@@ -132,7 +132,7 @@ custom_callbacks = [
 ]
 
 # Train network
-num_epochs = 10
+num_epochs = 20
 history = model.fit(
     train_generator,
     epochs = num_epochs,
@@ -158,14 +158,14 @@ plt.plot(epochs, acc, 'bo', label = 'Training Accuracy')
 plt.plot(epochs, val_acc, 'b', label = 'Validation Accuracy')
 plt.title('Training and Validation Accuracy')
 plt.legend()
-plt.savefig("/home/ewang96/CS1430/CVFinal/result1acc.png")
+plt.savefig("/home/ewang96/CS1430/CVFinal/Accuracy.png")
 plt.clf()
 
 plt.plot(epochs, loss, 'bo', label = 'Training loss')
 plt.plot(epochs, val_loss, 'b', label = 'Validation Loss')
 plt.title('Training and Validation Loss')
 plt.legend()
-plt.savefig("/home/ewang96/CS1430/CVFinal/result1.png")
+plt.savefig("/home/ewang96/CS1430/CVFinal/Loss.png")
 
 # plt.show()
 
@@ -184,4 +184,4 @@ test_results = pd.DataFrame({
     "Filename": test_generator.filenames,
     "Prediction": preds.flatten()
 })
-print(test_results)
+print(test_results.to_string())

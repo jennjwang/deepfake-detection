@@ -109,7 +109,7 @@ model.add(Dense(units = 1, activation = 'sigmoid'))
 model.summary()
 
 # Compile model
-model.compile(optimizer = Adam(lr=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer = Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
 
 checkpoint_filepath = './/tmp_checkpoint'
 print('Creating Directory: ' + checkpoint_filepath)
@@ -130,6 +130,28 @@ custom_callbacks = [
         save_best_only = True
     )
 ]
+
+# import PIL
+# from pathlib import Path
+# from PIL import UnidentifiedImageError
+
+# path = Path(train_path).rglob("*.png")
+# for img_p in path:
+#     try:
+#         img = PIL.Image.open(img_p)
+#     except PIL.UnidentifiedImageError:
+#             print(img_p)
+#             os.remove(img_p)
+
+# path = Path(val_path).rglob("*.png")
+# for img_p in path:
+#     try:
+#         img = PIL.Image.open(img_p)
+#     except PIL.UnidentifiedImageError:
+#             print(img_p)
+#             os.remove(file_path)
+
+# https://stackoverflow.com/questions/67505710/pil-unidentifiedimageerror-cannot-identify-image-file-io-bytesio-object
 
 # Train network
 num_epochs = 20
@@ -185,3 +207,21 @@ test_results = pd.DataFrame({
     "Prediction": preds.flatten()
 })
 print(test_results.to_string())
+
+# result = test_results.to_json(orient="records").replace('},{', '} {')
+
+# with open('./cnn_preds.json', 'w') as outfile:
+#     json.dump(result, outfile, indent=4)
+
+test_results.to_json("./cnn_preds_values.json", orient="values")
+
+# spark = SparkSession.builder.appName("pandas to spark").getOrCreate()
+# # sc = SparkContext()
+# # df_spark = sc.createDataFrame(test_results)
+# # df_spark.show()
+
+# def mapper0(record):
+#     print(record)
+
+# mapreduce = spark.sparkContext.parallelize(test_results, 64).map(mapper0)
+# print(mapreduce)

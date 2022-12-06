@@ -42,6 +42,7 @@ export TENSORPACK_PIPEDIR=/ltmp/
 export CUDA_CACHE_PATH=/ltmp/
 
 export LD_LIBRARY_PATH="/home/ewang96/.local/lib/python3.9/site-packages/tensorrt/"
+export LD_LIBRARY_PATH="/home/ewang96/miniconda3/lib"
 
 export TF_ENABLE_ONEDNN_OPTS=1
 # Runs the python file passing all args and pipes n into the file. 

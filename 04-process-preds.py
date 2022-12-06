@@ -36,6 +36,18 @@ def mapperSeparatePred(record):
     return (isReal, [(actualPred, 1)])
     # the latter part of the tuple will be summed up to track how many total videos there are here
 
+def mapperConfusion(record):
+    pred = 0
+    isReal, video = record[0]
+    listTups = record[1]
+    rearranged = zip(*listTups)
+    sumTup = [sum(zipped) for zipped in rearranged]
+    actualPred = sumTup[0]/sumTup[1]
+    if actualPred > 0.5:
+        pred = 1
+    # return (record[0], actualPred)
+    return ((isReal, pred), [(actualPred, 1)])
+
 def mapperSeparate(record):
     isCorrect = 0
     isReal, video = record[0]
@@ -89,12 +101,22 @@ def mapper2Pred(record):
     overallPred = sumPred/total
     return (isReal, (total, overallPred))
 
+def mapper2Confusion(record):
+    isReal, pred = record[0]
+    listTups = record[1]
+    rearranged = zip(*listTups)
+    sumTup = [sum(zipped) for zipped in rearranged]
+    sumPred = sumTup[0]
+    total = sumTup[1]
+    overallPred = sumPred/total
+    return ((isReal, pred), (total, overallPred))
+
 res = []
 with open("./cnn_preds_values.json", "r") as read_content:
     res = json.load(read_content)
 read_content.close()
 
-f = open("./mapreduce_res.txt", "w")
+f = open("./mapreduce_res_confusion.txt", "w")
 f.write("a record looks like this: [\"real\//aayrffkzxn-002-00.png\",0.7517728806]\n\n\n")
 f.write("1. first mapper: extracted real/fake, video name.  Stored as tuple in key.\n")
 f.write("the prediction and 1 are put in a tuple, then in a list as the value\n")
@@ -129,10 +151,19 @@ for ele in res_part2c.collect():
     f.write(str(ele) + "\n")
 f.write("\n")
 
+f.write("\n")
+f.write("2d. fourth variation: confusion matrix\n")
+f.write("mapper: return ((isReal, pred), [(actualPred, 1)])\n")
+f.write("reducer will reduce by combos of correctly real/fake or false pos/neg also calculate average pred for each\n")
+res_part2d = spark.sparkContext.parallelize(res, 64).map(mapper0).reduceByKey(reducer0).map(mapperConfusion).reduceByKey(reducer1)
+for ele in res_part2d.collect():
+    f.write(str(ele) + "\n")
+f.write("\n")
+
 resSeparate = spark.sparkContext.parallelize(res, 64).map(mapper0).reduceByKey(reducer0).map(mapperSeparate).reduceByKey(reducer1).map(mapper2)
 resTgth = spark.sparkContext.parallelize(res, 64).map(mapper0).reduceByKey(reducer0).map(mapperTgth).reduceByKey(reducer1).map(mapper2)
 resPred = spark.sparkContext.parallelize(res, 64).map(mapper0).reduceByKey(reducer0).map(mapperSeparatePred).reduceByKey(reducer1).map(mapper2Pred)
-
+resConfusion = spark.sparkContext.parallelize(res, 64).map(mapper0).reduceByKey(reducer0).map(mapperConfusion).reduceByKey(reducer1).map(mapper2Confusion)
 
 f.write("3a. Accuracy, overall: (42, totalCorrect), (total, accuracy)\n")
 for ele in resTgth.collect():
@@ -146,6 +177,12 @@ f.write("\n")
 
 f.write("3c. OverallPred, separated into real and fake: (isReal, (total of real or fake vids, overallPred))\n")
 for ele in resPred.collect():
+    f.write(str(ele) + "\n")
+
+f.write("\n")
+
+f.write("3d. confusion matrix res: return ((isReal, pred), (total, overallPred))\n")
+for ele in resConfusion.collect():
     f.write(str(ele) + "\n")
 
 f.close()

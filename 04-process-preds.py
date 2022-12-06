@@ -95,6 +95,7 @@ with open("./cnn_preds_values.json", "r") as read_content:
 read_content.close()
 
 f = open("./mapreduce_res.txt", "w")
+f.write("a record looks like this: [\"real\//aayrffkzxn-002-00.png\",0.7517728806]\n\n\n")
 f.write("1. first mapper: extracted real/fake, video name.  Stored as tuple in key.\n")
 f.write("the prediction and 1 are put in a tuple, then in a list as the value\n")
 f.write("first reducer: combined all the frames from the same video, and append tuple lists tgth\n")

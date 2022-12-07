@@ -38,14 +38,14 @@ for filename in metadata.keys():
     print(tmp_path)
     if os.path.exists(tmp_path):
         if metadata[filename]['label'] == 'REAL':   
-            file_path = os.path.join(real_path,filename)
+            file_path = os.path.join(real_path,filename) #make new file folder for each video
             os.makedirs(file_path, exist_ok=True) 
-            print('Copying to :' + real_path)
+            print('Copying to :' + file_path)
             copy_tree(tmp_path, file_path)
         elif metadata[filename]['label'] == 'FAKE':
-            file_path = os.path.join(fake_path,filename)
+            file_path = os.path.join(fake_path,filename) #make new file folder for each video
             os.makedirs(file_path, exist_ok=True) 
-            print('Copying to :' + tmp_fake_path)
+            print('Copying to :' + file_path)
             copy_tree(tmp_path, file_path)
         else:
             print('Ignored..')
@@ -61,7 +61,7 @@ for fname in random_faces:
     src = os.path.join(tmp_fake_path, fname)
     dst = os.path.join(fake_path, fname)
     shutil.copyfile(src, dst)
-
+how
 print('Down-sampling Done!')
 
 # Split into Train/ Val/ Test folders

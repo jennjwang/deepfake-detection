@@ -4,6 +4,7 @@ import sys, os, os.path
 import json
 from keras import backend as K
 import tensorflow as tf
+import tensorrt
 import logging
 print(tf.__version__)
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
@@ -11,7 +12,11 @@ tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 physical_devices = tf.config.list_physical_devices('GPU')
 print(physical_devices)
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
+os.environ["SM_FRAMEWORK"] = "tf.keras"
 
+print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+# TF_XLA_FLAGS=--tf_xla_enable_xla_devices
+# os.environ["XLA_FLAGS"]="--tf_xla_enable_xla_devices"
 
 # os.environ["LD_LIBRARY_PATH"]="/home/ewang96/.local/lib/python3.9/site-packages/tensorrt/"
 

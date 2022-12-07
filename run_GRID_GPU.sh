@@ -19,9 +19,9 @@
 # cd /home/ewang96/CS1430/DeepFake-Detect
 # cd /home/ewang96/miniconda3/envs/tf_gpu
 # pwd
-cd /home/ewang96/CS1430/CVFinal
+cd /home/ewang96/CS1430/Editing_CVFinal/CVFinal
 
-source /home/ewang96/miniconda3/bin/activate tf_gpu
+source /home/ewang96/miniconda3/bin/activate tf_gpu1
 # pip install -r requirements.txt --user
 
 # eval "$(conda shell.bash hook)"
@@ -36,18 +36,27 @@ FILE=$1
 shift
 # Tensorpack specific setting to cache ZMQ pipes in /ltmp/ 
 # for speed boost
+# export PYTHONPATH="${PYTHONPATH}:/home/ewang96/miniconda3/envs/tf_gpu/lib/python3.9"
+# export LD_LIBRARY_PATH="$/home/ewang96/miniconda3/envs/tf_gpu1/lib/python3.8/site-packages/tensorrt:${LD_LIBRARY_PATH}"
 export TENSORPACK_PIPEDIR=/ltmp/
+export PATH="/home/ewang96/.local/bin:${PATH}"
 # If you need to compile any CUDA kernels do it on the local FS 
 # so it happens faster
 export CUDA_CACHE_PATH=/ltmp/
 
-export LD_LIBRARY_PATH="/home/ewang96/.local/lib/python3.9/site-packages/tensorrt/"
-export LD_LIBRARY_PATH="/home/ewang96/miniconda3/lib"
-
+# export LD_LIBRARY_PATH="/home/ewang96/.local/lib/python3.9/site-packages/tensorrt/${LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="/home/ewang96/miniconda3/lib:${LD_LIBRARY_PATH}"
+# export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/
 export TF_ENABLE_ONEDNN_OPTS=1
+export XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
+# export TF_XLA_FLAGS=--tf_xla_auto_jit=2
+export TF_XLA_FLAGS=--tf_xla_enable_xla_devices
 # Runs the python file passing all args and pipes n into the file. 
 # -u tells python to not buffer the output to so it is printed
 # more often.
+
+# conda list 
+which python
 pwd
 echo -e "n\n" | python -u $FILE $@
 

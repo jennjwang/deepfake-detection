@@ -37,12 +37,16 @@ for filename in metadata.keys():
     tmp_path = os.path.join(os.path.join(base_path, get_filename_only(filename)), 'faces')
     print(tmp_path)
     if os.path.exists(tmp_path):
-        if metadata[filename]['label'] == 'REAL':    
+        if metadata[filename]['label'] == 'REAL':   
+            file_path = os.path.join(real_path,filename)
+            os.makedirs(file_path, exist_ok=True) 
             print('Copying to :' + real_path)
-            copy_tree(tmp_path, real_path)
+            copy_tree(tmp_path, file_path)
         elif metadata[filename]['label'] == 'FAKE':
+            file_path = os.path.join(fake_path,filename)
+            os.makedirs(file_path, exist_ok=True) 
             print('Copying to :' + tmp_fake_path)
-            copy_tree(tmp_path, tmp_fake_path)
+            copy_tree(tmp_path, file_path)
         else:
             print('Ignored..')
 

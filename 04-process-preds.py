@@ -70,9 +70,9 @@ def mapperTgth(record):
     rearranged = zip(*listTups)
     sumTup = [sum(zipped) for zipped in rearranged]
     actualPred = sumTup[0]/sumTup[1]
-    if actualPred <= 0.5 and isReal == 0:
+    if actualPred < 0.5 and isReal == 0:
         isCorrect = 1
-    if actualPred > 0.5 and isReal == 1:
+    if actualPred >= 0.5 and isReal == 1:
         isCorrect = 1
     # return (record[0], actualPred)
     return (42, [(isCorrect, 1)])
@@ -112,11 +112,13 @@ def mapper2Confusion(record):
     return ((isReal, pred), (total, overallPred))
 
 res = []
+# with open("./loaded_model_test.json", "r") as read_content:
 with open("./cnn_preds_values.json", "r") as read_content:
     res = json.load(read_content)
 read_content.close()
 
 f = open("./mapreduce_res_confusion.txt", "w")
+# f = open("./loaded_model_test_processed.txt", "w")
 f.write("a record looks like this: [\"real\//aayrffkzxn-002-00.png\",0.7517728806]\n\n\n")
 f.write("1. first mapper: extracted real/fake, video name.  Stored as tuple in key.\n")
 f.write("the prediction and 1 are put in a tuple, then in a list as the value\n")

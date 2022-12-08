@@ -109,8 +109,10 @@ model.add(Dense(units = 1, activation = 'sigmoid'))
 model.summary()
 
 # Compile model
+# model.compile(optimizer = Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
 model.compile(optimizer = Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
 
+# model.compile(optimizer = Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['sparse_categorical_crossentropy'])
 checkpoint_filepath = './/tmp_checkpoint'
 print('Creating Directory: ' + checkpoint_filepath)
 os.makedirs(checkpoint_filepath, exist_ok=True)
@@ -180,19 +182,19 @@ plt.plot(epochs, acc, 'bo', label = 'Training Accuracy')
 plt.plot(epochs, val_acc, 'b', label = 'Validation Accuracy')
 plt.title('Training and Validation Accuracy')
 plt.legend()
-plt.savefig("/home/ewang96/CS1430/CVFinal/Accuracy.png")
+plt.savefig("/home/ewang96/CS1430/Editing_CVFinal/CVFinal/Accuracy.png")
 plt.clf()
 
 plt.plot(epochs, loss, 'bo', label = 'Training loss')
 plt.plot(epochs, val_loss, 'b', label = 'Validation Loss')
 plt.title('Training and Validation Loss')
 plt.legend()
-plt.savefig("/home/ewang96/CS1430/CVFinal/Loss.png")
+plt.savefig("/home/ewang96/CS1430/Editing_CVFinal/CVFinal/Loss.png")
 
 # plt.show()
 
 # load the saved model that is considered the best
-best_model = load_model(os.path.join(checkpoint_filepath, 'best_model.h5'))
+best_model = load_model(os.path.join(checkpoint_filepath, 'best_model_retry_acc_fix.h5'))
 
 # Generate predictions
 test_generator.reset()
@@ -214,6 +216,41 @@ print(test_results.to_string())
 #     json.dump(result, outfile, indent=4)
 
 test_results.to_json("./cnn_preds_values.json", orient="values")
+
+
+test_generator_class = test_datagen.flow_from_directory(
+    directory = test_path,
+    classes=['real', 'fake'],
+    target_size = (input_size, input_size),
+    color_mode = "rgb",
+    class_mode = "binary",
+    batch_size = 1,
+    shuffle = False
+)
+
+labels_flipped = test_generator_class.classes
+predictions = preds.flatten()
+correct = 0
+total = 0
+correct_ones = []
+for i in range(len(labels_flipped)):
+    rounded = 0
+    if predictions[i] >= 0.5:
+        rounded = 1
+    if rounded != labels_flipped[i]:
+        correct += 1
+        correct_ones.append(1)
+    else:
+        correct_ones.append(0)
+    total += 1
+print("Total Correct: ", correct)
+print("Total: ", total)
+accuracy = correct / total
+print("Accuracy: ", accuracy)
+print(correct_ones)
+
+print(test_results.shape)
+print(test_results.to_string())
 
 # spark = SparkSession.builder.appName("pandas to spark").getOrCreate()
 # # sc = SparkContext()

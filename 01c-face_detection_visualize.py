@@ -15,7 +15,6 @@ with open(os.path.join(base_path, 'metadata.json')) as metadata_json:
     metadata = json.load(metadata_json)
     print(len(metadata))
 
-x = 0
 def draw_facebox(filename, result_list, path):
     data = plt.imread(filename)
     plt.imshow(data)

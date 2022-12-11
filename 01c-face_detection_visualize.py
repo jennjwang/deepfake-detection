@@ -19,6 +19,7 @@ def draw_facebox(filename, result_list, path):
     data = plt.imread(filename)
     plt.imshow(data)
     ax = plt.gca()
+    ax.set_axis_off()
     if result_list == []:
         return
     result = result_list[0]
@@ -29,7 +30,7 @@ def draw_facebox(filename, result_list, path):
         dot = plt.Circle(value, radius=2, color='red')
         ax.add_patch(dot)
     img_path = os.path.join(path, get_filename_only(filename))
-    plt.savefig(img_path)
+    plt.savefig(img_path,bbox_inches ='tight',pad_inches=0)
     plt.close()
     
 detector = MTCNN()

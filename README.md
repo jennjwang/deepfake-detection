@@ -79,9 +79,10 @@ In order to prevent the convolutional neural network from being misled by backgr
 #### Optional Step 1a - Plot red points on key facial features
 
 ```
-python 01b-crop_faces_with_azure-vision-api.py
+python 01a-face_detection_visualize.py
 
 run on Brown department GPUs:
+qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01a run_GRID_GPU.sh 01a-face_detection_visualize.py -cwd
 
 ```
 

@@ -54,6 +54,8 @@ run on Brown department GPUs:
 
 After saving the dataset (mp4 videos and a json with whether each video is real or fake) in a directory called train_sample_videos, this program loops through each video and extracts 11 frames from each.  It creates a directory with the same name as the video title, and saves the 11 frames as png files in the folders.  It also standardizes the sizes of the images.
 
+<img src="./img/vid_frames.jpg" alt="Video Frame Results" width="100"/>
+
 ![Video Frame Results](./img/vid_frames.jpg)
 
 #### Step 1 - Crop areas of interest from the image frames by extracting faces

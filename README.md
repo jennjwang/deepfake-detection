@@ -38,7 +38,9 @@ Packages involved in the running of the program on the NVIDIA GPU include:
 - tensorflow-gpu
 - cudatoolkit
 
-### The Program
+<br>
+
+## The Program
 
 #### Step 0 - Convert the video into image frames
 
@@ -51,6 +53,8 @@ run on Brown department GPUs:
 ```
 
 After saving the dataset (mp4 videos and a json with whether each video is real or fake) in a directory called train_sample_videos, this program loops through each video and extracts 11 frames from each.  It creates a directory with the same name as the video title, and saves the 11 frames as png files in the folders.  It also standardizes the sizes of the images.
+
+![Video Frame Results](./img/vid_frames.jpg)
 
 #### Step 1 - Crop areas of interest from the image frames by extracting faces
 

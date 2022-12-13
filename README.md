@@ -8,6 +8,9 @@ This project is inspired by Kaggle's Deepfake Detection Challenge in collaborati
 - [Deepfake Detection Challenge Results: An open initiative to advance AI](https://ai.facebook.com/blog/deepfake-detection-challenge-results-an-open-initiative-to-advance-ai/)
 - [Kaggle: Deepfake Detection Challenge](https://www.kaggle.com/competitions/deepfake-detection-challenge/data)
 
+<p align="center">
+<img src="./img/sample_dataset.png" alt="Sample Image" width="500"/>
+</p>
 
 <br>
 
@@ -75,8 +78,9 @@ qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01 run_GRID_GPU.sh 01a-crop_faces_
 
 In order to prevent the convolutional neural network from being misled by background or distracting features, we crop the images into a box containing just the face.  The faces are detected using [Python package MTCNN](https://github.com/ipazc/mtcnn), with a 95% confidence threshold.  If there are multiple people in a video, multiple faces are saved.  These faces are saved within the directory for each video, in a new directory called "faces".
 
+<p align="center">
 <img src="./img/face_frames.jpg" alt="Face Frame Results" width="400"/>
-
+</p>
 
 #### Optional Step 1b - Plot red points on key facial features
 
@@ -90,7 +94,9 @@ qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01a run_GRID_GPU.sh 01b-face_detec
 
 MTCNN also generates fields with the coordinates of key facial features, include the eyes, nose, and corners of the mouth.  An optional, additional preprocessing step that we tested is plotting red coordinate points on these key facial features on the cropped images.  These faces are saved within the directory for each video, in a new directory alongside "faces", called "marked_faces".
 
+<p align="center">
 <img src="./img/face_marked_frames.jpg" alt="Marked Face Frame Results" width="400"/>
+</p>
 
 #### Step 2 - Separate the face frames into real/fake sets, then training/testing/validation sets 
 
@@ -137,7 +143,7 @@ This step uses PySpark and the MapReduce technique on the cnn_preds_values.json 
 ## Authors
 
 * **Emily Wang** - [ewang96](https://github.com/ewang96)
-* **Hannah Jeon** - [hugoclong](https://github.com/hugoclong)
+* **Hannah Jeon** - []()
 * **Ria Rajesh** - []()
 * **Jennifer Wang** - []()
 

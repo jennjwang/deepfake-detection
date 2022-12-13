@@ -142,8 +142,8 @@ This step uses PySpark and the MapReduce technique on the cnn_preds_values.json 
 
 ## Authors
 
-* **Emily Wang** - [ewang96](https://github.com/ewang96)
-* **Hannah Jeon** - []()
-* **Ria Rajesh** - []()
-* **Jennifer Wang** - []()
+* **Emily Wang** - [emilyaw24](https://github.com/emilyaw24)
+* **Hannah Jeon** - [j200183](https://github.com/j200183)
+* **Ria Rajesh** - [rrajesh1](https://github.com/rrajesh1)
+* **Jennifer Wang** - [jennjwang](https://github.com/jennjwang)
 

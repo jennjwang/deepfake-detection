@@ -56,7 +56,7 @@ qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task00 run_GRID_GPU.sh 00-convert_vide
 
 After saving the dataset (mp4 videos and a json with whether each video is real or fake) in a directory called train_sample_videos, this program loops through each video and extracts 11 frames from each.  It creates a directory with the same name as the video title, and saves the 11 frames as png files in the folders.  It also standardizes the sizes of the images.
 
-<img src="./img/vid_frames.jpg" alt="Video Frame Results" width="500"/>
+<img src="./img/vid_frames.jpg" alt="Video Frame Results" width="400"/>
 
 <!-- ![Video Frame Results](./img/vid_frames.jpg) -->
 
@@ -73,7 +73,7 @@ qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01 run_GRID_GPU.sh 01a-crop_faces_
 
 In order to prevent the convolutional neural network from being misled by background or distracting features, we crop the images into a box containing just the face.  The faces are detected using [Python package MTCNN](https://github.com/ipazc/mtcnn), with a 95% confidence threshold.  If there are multiple people in a video, multiple faces are saved.  These faces are saved within the directory for each video, in a new directory called "faces".
 
-<img src="./img/face_frames.jpg" alt="Face Frame Results" width="500"/>
+<img src="./img/face_frames.jpg" alt="Face Frame Results" width="400"/>
 
 
 #### Optional Step 1b - Plot red points on key facial features
@@ -88,7 +88,7 @@ qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01a run_GRID_GPU.sh 01b-face_detec
 
 MTCNN also generates fields with the coordinates of key facial features, include the eyes, nose, and corners of the mouth.  An optional, additional preprocessing step that we tested is plotting red coordinate points on these key facial features on the cropped images.  These faces are saved within the directory for each video, in a new directory alongside "faces", called "marked_faces".
 
-<img src="./img/face_marked_frames.jpg" alt="Marked Face Frame Results" width="500"/>
+<img src="./img/face_marked_frames.jpg" alt="Marked Face Frame Results" width="400"/>
 
 #### Step 2 - Separate the face frames into real/fake sets, then training/testing/validation sets 
 

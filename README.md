@@ -72,7 +72,7 @@ run locally:
 python 01a-crop_faces_with_mtcnn.py
 
 run on Brown department GPUs:
-qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01 run_GRID_GPU.sh 01a-crop_faces_with_mtcnn.py -cwd
+qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01a run_GRID_GPU.sh 01a-crop_faces_with_mtcnn.py -cwd
 
 ```
 
@@ -88,7 +88,7 @@ In order to prevent the convolutional neural network from being misled by backgr
 python 01b-face_detection_visualize.py
 
 run on Brown department GPUs:
-qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01a run_GRID_GPU.sh 01b-face_detection_visualize.py -cwd
+qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01b run_GRID_GPU.sh 01b-face_detection_visualize.py -cwd
 
 ```
 
@@ -127,7 +127,7 @@ Our CNN uses an EfficientNetB0 head because the Meta challenge results said that
 python 03a-load_cnn.py
 
 run on Brown department GPUs:
-qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task03a run_GRID_GPU.sh 03a-load_CNN.py -cwd
+qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task03a run_GRID_GPU.sh 03a-load_cnn.py -cwd
 ```
 
 This program is a tool that can load weights (the best_model.h5 file outputted from Step 3) and generate predictions on the test set.
@@ -135,10 +135,18 @@ This program is a tool that can load weights (the best_model.h5 file outputted f
 #### Step 4 - Turn predictions on each face-frame into predictions on each video
 
 ```
-python 04-process-preds.py
+python 04-process_preds.py
 ```
 
 This step uses PySpark and the MapReduce technique on the cnn_preds_values.json file outputted by Step 3.  In order to get the overall prediction of real or fake on a video, we needed to average the predictions on each face-frame corresponding to this video, and this requires a lot of linear operations, which is why the parallelization of PySpark makes this very efficient.  From this step, there is an outputted file mapreduce_res.txt containing the video-prediction accuracy (rounding each prediction to 1 or 0 and comparing them with the correct labels), the average decimal prediction for each video (real videos should average close to 1, fake close to 0), and a table with the predictions versus the correct answers.  It also outputs a confusion matrix, ConfusionVideo.png.  
+
+#### ADDITIONAL TOOL: (Step 5) - Generate image grids
+```
+python 05-image_grid.py
+```
+
+Create a directory of images (preferably with a square number), input the filename of this directory into the images_dir variable, select a name for result_grid_filename, and run to generate a jpg file with the photos in a grid.  Used for generating result visualizations.
+
 
 ## Authors
 

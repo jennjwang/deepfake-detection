@@ -1,4 +1,4 @@
-# CV Final Project: Deepfake Detection
+# CSCI1430: Computer Vision Final Project: Deepfake Detection
 
 ## Description
 

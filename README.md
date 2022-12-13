@@ -56,7 +56,9 @@ qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task00 run_GRID_GPU.sh 00-convert_vide
 
 After saving the dataset (mp4 videos and a json with whether each video is real or fake) in a directory called train_sample_videos, this program loops through each video and extracts 11 frames from each.  It creates a directory with the same name as the video title, and saves the 11 frames as png files in the folders.  It also standardizes the sizes of the images.
 
+<p align="center">
 <img src="./img/vid_frames.jpg" alt="Video Frame Results" width="400"/>
+</p>
 
 <!-- ![Video Frame Results](./img/vid_frames.jpg) -->
 

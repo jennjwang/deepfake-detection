@@ -3,6 +3,9 @@ import os
 from distutils.dir_util import copy_tree
 import shutil
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy
+from sklearn import metrics
 
 # TensorFlow and tf.keras
 import tensorflow as tf
@@ -10,16 +13,9 @@ from tensorflow.keras import backend as K
 print('TensorFlow version: ', tf.__version__)
 os.environ["XLA_FLAGS"]="--xla_gpu_cuda_data_dir=/usr/lib/cuda"
 
-# Set to force CPU
-#os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-#if tf.test.gpu_device_name():
-#    print('GPU found')
-#else:
-#    print("No GPU found")
 
-dataset_path = './/split_dataset//'
-
-tmp_debug_path = './/tmp_debug'
+dataset_path = './/complete_data//split_dataset_marked//'
+tmp_debug_path = './/complete_data//tmp_debug_marked//'
 print('Creating Directory: ' + tmp_debug_path)
 os.makedirs(tmp_debug_path, exist_ok=True)
 
@@ -30,7 +26,7 @@ def get_filename_only(file_path):
 
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import applications
-from efficientnet.tfkeras import EfficientNetB0 #EfficientNetB1, EfficientNetB2, EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6, EfficientNetB7
+from efficientnet.tfkeras import EfficientNetB0
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.optimizers import Adam
@@ -61,7 +57,6 @@ train_generator = train_datagen.flow_from_directory(
     class_mode = "binary",  #"categorical", "binary", "sparse", "input"
     batch_size = batch_size_num,
     shuffle = True
-    #save_to_dir = tmp_debug_path
 )
 
 val_datagen = ImageDataGenerator(
@@ -75,7 +70,6 @@ val_generator = val_datagen.flow_from_directory(
     class_mode = "binary",  #"categorical", "binary", "sparse", "input"
     batch_size = batch_size_num,
     shuffle = True
-    #save_to_dir = tmp_debug_path
 )
 
 test_datagen = ImageDataGenerator(
@@ -100,60 +94,37 @@ efficient_net = EfficientNetB0(
     pooling = 'max'
 )
 
+
 model = Sequential()
 model.add(efficient_net)
 model.add(Dense(units = 512, activation = 'relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.2))
 model.add(Dense(units = 128, activation = 'relu'))
 model.add(Dense(units = 1, activation = 'sigmoid'))
 model.summary()
 
 # Compile model
-# model.compile(optimizer = Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
-model.compile(optimizer = Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer = Adam(learning_rate=0.001), loss='binary_crossentropy', metrics=['accuracy'])
 
-# model.compile(optimizer = Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['sparse_categorical_crossentropy'])
-checkpoint_filepath = './/tmp_checkpoint'
+checkpoint_filepath = './/complete_data//tmp_checkpoint_marked'
 print('Creating Directory: ' + checkpoint_filepath)
 os.makedirs(checkpoint_filepath, exist_ok=True)
 
 custom_callbacks = [
     EarlyStopping(
-        monitor = 'val_loss',
-        mode = 'min',
-        patience = 5,
+        monitor = 'val_accuracy',
+        mode = 'max',
+        patience = 7,
         verbose = 1
     ),
     ModelCheckpoint(
         filepath = os.path.join(checkpoint_filepath, 'best_model.h5'),
-        monitor = 'val_loss',
-        mode = 'min',
+        monitor = 'val_accuracy',
+        mode = 'max',
         verbose = 1,
         save_best_only = True
     )
 ]
-
-# import PIL
-# from pathlib import Path
-# from PIL import UnidentifiedImageError
-
-# path = Path(train_path).rglob("*.png")
-# for img_p in path:
-#     try:
-#         img = PIL.Image.open(img_p)
-#     except PIL.UnidentifiedImageError:
-#             print(img_p)
-#             os.remove(img_p)
-
-# path = Path(val_path).rglob("*.png")
-# for img_p in path:
-#     try:
-#         img = PIL.Image.open(img_p)
-#     except PIL.UnidentifiedImageError:
-#             print(img_p)
-#             os.remove(file_path)
-
-# https://stackoverflow.com/questions/67505710/pil-unidentifiedimageerror-cannot-identify-image-file-io-bytesio-object
 
 # Train network
 num_epochs = 20
@@ -182,19 +153,19 @@ plt.plot(epochs, acc, 'bo', label = 'Training Accuracy')
 plt.plot(epochs, val_acc, 'b', label = 'Validation Accuracy')
 plt.title('Training and Validation Accuracy')
 plt.legend()
-plt.savefig("/home/ewang96/CS1430/Editing_CVFinal/CVFinal/Accuracy.png")
+plt.savefig("/home/ewang96/CS1430/Editing_CVFinal/CVFinal/complete_data/Accuracy_marked.png")
 plt.clf()
 
 plt.plot(epochs, loss, 'bo', label = 'Training loss')
 plt.plot(epochs, val_loss, 'b', label = 'Validation Loss')
 plt.title('Training and Validation Loss')
 plt.legend()
-plt.savefig("/home/ewang96/CS1430/Editing_CVFinal/CVFinal/Loss.png")
+plt.savefig("/home/ewang96/CS1430/Editing_CVFinal/CVFinal/complete_data/Loss_marked.png")
+plt.clf()
 
-# plt.show()
 
 # load the saved model that is considered the best
-best_model = load_model(os.path.join(checkpoint_filepath, 'best_model_retry_acc_fix.h5'))
+best_model = load_model(os.path.join(checkpoint_filepath, 'best_model.h5'))
 
 # Generate predictions
 test_generator.reset()
@@ -210,12 +181,7 @@ test_results = pd.DataFrame({
 })
 print(test_results.to_string())
 
-# result = test_results.to_json(orient="records").replace('},{', '} {')
-
-# with open('./cnn_preds.json', 'w') as outfile:
-#     json.dump(result, outfile, indent=4)
-
-test_results.to_json("./cnn_preds_values.json", orient="values")
+test_results.to_json("./complete_data/cnn_preds_values_marked.json", orient="values")
 
 
 test_generator_class = test_datagen.flow_from_directory(
@@ -233,15 +199,24 @@ predictions = preds.flatten()
 correct = 0
 total = 0
 correct_ones = []
+rounded_preds = []
+correct_labels = []
 for i in range(len(labels_flipped)):
     rounded = 0
     if predictions[i] >= 0.5:
         rounded = 1
+    rounded_preds.append(rounded)
     if rounded != labels_flipped[i]:
         correct += 1
         correct_ones.append(1)
     else:
         correct_ones.append(0)
+    
+    if labels_flipped[i] == 1:
+        correct_labels.append(0)
+    else:
+        correct_labels.append(1)
+    
     total += 1
 print("Total Correct: ", correct)
 print("Total: ", total)
@@ -252,13 +227,9 @@ print(correct_ones)
 print(test_results.shape)
 print(test_results.to_string())
 
-# spark = SparkSession.builder.appName("pandas to spark").getOrCreate()
-# # sc = SparkContext()
-# # df_spark = sc.createDataFrame(test_results)
-# # df_spark.show()
-
-# def mapper0(record):
-#     print(record)
-
-# mapreduce = spark.sparkContext.parallelize(test_results, 64).map(mapper0)
-# print(mapreduce)
+confusion_matrix = metrics.confusion_matrix(correct_labels, rounded_preds)
+cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_labels = ["Fake", "Real"])
+cm_display.plot()
+plt.title("Confusion Matrix for Predictions on Faces")
+plt.savefig("/home/ewang96/CS1430/Editing_CVFinal/CVFinal/complete_data/Confusion_marked.png")
+plt.clf()

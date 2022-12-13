@@ -3,7 +3,7 @@ import os
 import cv2
 import math
 
-base_path = './/train_sample_videos//'
+base_path = './/complete_data//train_sample_videos//'
 
 def get_filename_only(file_path):
     file_basename = os.path.basename(file_path)

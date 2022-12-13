@@ -4,7 +4,7 @@ import os
 import json
 import cv2
 
-base_path = './/train_sample_videos//'
+base_path = './/complete_data/train_sample_videos//'
 
 def get_filename_only(file_path):
     file_basename = os.path.basename(file_path)
@@ -39,13 +39,10 @@ for filename in metadata.keys():
     file_path = os.path.join(base_path, get_filename_only(filename))
     faces_path = os.path.join(file_path, 'faces')
     filtered = [f for f in os.listdir(faces_path) if f[0] != '.']
-    new_dir = os.path.join(file_path,"extracted_faces")
+    new_dir = os.path.join(file_path,"marked_faces")
     os.makedirs(new_dir, exist_ok=True)
     for path in filtered:
         face_path = os.path.join(faces_path, path)
         image = cv2.cvtColor(cv2.imread(face_path), cv2.COLOR_BGR2RGB)
         faces = detector.detect_faces(image)
         draw_facebox(face_path, faces, new_dir)
-
-
-

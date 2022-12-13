@@ -46,7 +46,6 @@ test_generator_class = test_datagen.flow_from_directory(
 )
 
 best_model = load_model(os.path.join(checkpoint_filepath, 'saved_model.pb'))
-# best_model = load_model(os.path.join(checkpoint_filepath))
 
 # Generate predictions
 test_generator.reset()
@@ -88,9 +87,5 @@ print(correct_ones)
 print(test_results.shape)
 print(test_results.to_string())
 
-# result = test_results.to_json(orient="records").replace('},{', '} {')
-
-# with open('./cnn_preds.json', 'w') as outfile:
-#     json.dump(result, outfile, indent=4)
 
 test_results.to_json("./01_loaded_model_test.json", orient="values")

@@ -15,12 +15,8 @@ tf.config.experimental.set_memory_growth(physical_devices[0], True)
 os.environ["SM_FRAMEWORK"] = "tf.keras"
 
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
-# TF_XLA_FLAGS=--tf_xla_enable_xla_devices
-# os.environ["XLA_FLAGS"]="--tf_xla_enable_xla_devices"
 
-# os.environ["LD_LIBRARY_PATH"]="/home/ewang96/.local/lib/python3.9/site-packages/tensorrt/"
-
-base_path = './/train_sample_videos//'
+base_path = './/complete_data//train_sample_videos//'
 
 def get_filename_only(file_path):
     file_basename = os.path.basename(file_path)

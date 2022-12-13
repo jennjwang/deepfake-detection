@@ -2,11 +2,17 @@ import pandas as pd
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
 import json
+import matplotlib.pyplot as plt
+import numpy
+from sklearn import metrics
+import seaborn as sns
 
 # https://spark.apache.org/docs/latest/sql-data-sources-json.html
 spark = SparkSession.builder.appName("athing").getOrCreate()
-# aDF = spark.read.json("./cnn_preds.json")
-# # aDF.show()
+
+
+actual = []
+pred = []
 
 def mapper0(record):
     isReal = 0
@@ -28,13 +34,7 @@ def mapperSeparatePred(record):
     rearranged = zip(*listTups)
     sumTup = [sum(zipped) for zipped in rearranged]
     actualPred = sumTup[0]/sumTup[1]
-    # if actualPred <= 0.5 and isReal == 0:
-    #     isCorrect = 1
-    # if actualPred > 0.5 and isReal == 1:
-    #     isCorrect = 1
-    # return (record[0], actualPred)
     return (isReal, [(actualPred, 1)])
-    # the latter part of the tuple will be summed up to track how many total videos there are here
 
 def mapperConfusion(record):
     pred = 0
@@ -45,7 +45,6 @@ def mapperConfusion(record):
     actualPred = sumTup[0]/sumTup[1]
     if actualPred > 0.5:
         pred = 1
-    # return (record[0], actualPred)
     return ((isReal, pred), [(actualPred, 1)])
 
 def mapperSeparate(record):
@@ -59,9 +58,7 @@ def mapperSeparate(record):
         isCorrect = 1
     if actualPred > 0.5 and isReal == 1:
         isCorrect = 1
-    # return (record[0], actualPred)
     return (isReal, [(isCorrect, 1)])
-    # the latter part of the tuple will be summed up to track how many total videos there are here
 
 def mapperTgth(record):
     isCorrect = 0
@@ -72,11 +69,29 @@ def mapperTgth(record):
     actualPred = sumTup[0]/sumTup[1]
     if actualPred < 0.5 and isReal == 0:
         isCorrect = 1
+        pred.append(0)
     if actualPred >= 0.5 and isReal == 1:
         isCorrect = 1
-    # return (record[0], actualPred)
+        pred.append(1)
+    actual.append(isReal)
     return (42, [(isCorrect, 1)])
-    # the latter part of the tuple will be summed up to track how many total videos there are here
+
+def mapperGuess(record):
+    isCorrect = 0
+    isReal, video = record[0]
+    listTups = record[1]
+    rearranged = zip(*listTups)
+    sumTup = [sum(zipped) for zipped in rearranged]
+    actualPred = sumTup[0]/sumTup[1]
+    guess = 0
+    if actualPred >= 0.5:
+        guess = 1
+    if actualPred < 0.5 and isReal == 0:
+        isCorrect = 1
+    if actualPred >= 0.5 and isReal == 1:
+        isCorrect = 1
+    return (video, (guess, isReal))
+
 
 def reducer1(a, b):
     return a + b
@@ -112,13 +127,11 @@ def mapper2Confusion(record):
     return ((isReal, pred), (total, overallPred))
 
 res = []
-# with open("./loaded_model_test.json", "r") as read_content:
-with open("./cnn_preds_values.json", "r") as read_content:
+with open("./complete_data/cnn_preds_values_marked.json", "r") as read_content:
     res = json.load(read_content)
 read_content.close()
 
-f = open("./mapreduce_res_confusion.txt", "w")
-# f = open("./loaded_model_test_processed.txt", "w")
+f = open("./complete_data/mapreduce_res_marked.txt", "w")
 f.write("a record looks like this: [\"real\//aayrffkzxn-002-00.png\",0.7517728806]\n\n\n")
 f.write("1. first mapper: extracted real/fake, video name.  Stored as tuple in key.\n")
 f.write("the prediction and 1 are put in a tuple, then in a list as the value\n")
@@ -183,15 +196,52 @@ for ele in resPred.collect():
 
 f.write("\n")
 
+confusion = [[0, 0], [0, 0]]
 f.write("3d. confusion matrix res: return ((isReal, pred), (total, overallPred))\n")
 for ele in resConfusion.collect():
     f.write(str(ele) + "\n")
+    isReal, pred = ele[0]
+    total, overallPred = ele[1]
+    if isReal == 0 and pred == 0:
+        confusion[0][0] = total
+    elif isReal == 0 and pred == 1: 
+        confusion[0][1] = total
+    elif isReal == 1 and pred == 0:
+        confusion[1][0] = total
+    else:
+        confusion[1][1] = total
+
+
+videos = []
+allGuesses = []
+truth = []
+guesses = spark.sparkContext.parallelize(res, 64).map(mapper0).reduceByKey(reducer0).map(mapperGuess)
+for ele in guesses.collect():
+    vid = ele[0]
+    guess, isReal = ele[1]
+    videos.append(vid)
+    allGuesses.append(guess)
+    truth.append(isReal)
+test_results = pd.DataFrame({
+    "Videos": videos,
+    "Prediction": allGuesses,
+    "Correct_Answer": truth
+})
+f.write("\n")
+f.write(test_results.to_string())
 
 f.close()
 
+print(confusion)
+x_labels = ["Fake", "Real"]
+y_labels = ["Fake", "Real"]
+s = sns.heatmap(confusion, annot=True, xticklabels=x_labels, yticklabels=y_labels)
+s.set(xlabel='Predicted label', ylabel='Actual label')
+s.set_title("Confusion Matrix for Predictions on Videos")
+fig = s.get_figure()
+fig.savefig("/home/ewang96/CS1430/Editing_CVFinal/CVFinal/complete_data/ConfusionVideo_marked.png")
 
 
 
-# with open('./reduce_result.json', 'w') as outfile:
-#     json.dump(mapreduce, outfile, indent=4)
-# print(mapreduce)
+
+

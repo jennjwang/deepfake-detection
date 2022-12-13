@@ -60,14 +60,14 @@ After saving the dataset (mp4 videos and a json with whether each video is real 
 
 <!-- ![Video Frame Results](./img/vid_frames.jpg) -->
 
-#### Step 1 - Crop areas of interest from the image frames by extracting faces
+#### Step 1a - Crop areas of interest from the image frames by extracting faces
 
 ```
 run locally:
 python 01a-crop_faces_with_mtcnn.py
 
 run on Brown department GPUs:
-qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01 run_GRID_GPU.sh 01-crop_faces_with_mtcnn.py -cwd
+qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01 run_GRID_GPU.sh 01a-crop_faces_with_mtcnn.py -cwd
 
 ```
 
@@ -76,13 +76,13 @@ In order to prevent the convolutional neural network from being misled by backgr
 <img src="./img/face_frames.jpg" alt="Face Frame Results" width="500"/>
 
 
-#### Optional Step 1a - Plot red points on key facial features
+#### Optional Step 1b - Plot red points on key facial features
 
 ```
-python 01a-face_detection_visualize.py
+python 01b-face_detection_visualize.py
 
 run on Brown department GPUs:
-qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01a run_GRID_GPU.sh 01a-face_detection_visualize.py -cwd
+qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task01a run_GRID_GPU.sh 01b-face_detection_visualize.py -cwd
 
 ```
 

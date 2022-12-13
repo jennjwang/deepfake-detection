@@ -50,7 +50,6 @@ This repository contains a file run_GRID_GPU.sh that initializes our conda envir
 #### Step 0 - Convert the video into image frames
 
 ```
-run locally:
 python 00-convert_video_to_image.py
 
 run on Brown department GPUs:
@@ -68,7 +67,6 @@ After saving the dataset (mp4 videos and a json with whether each video is real 
 #### Step 1a - Crop areas of interest from the image frames by extracting faces
 
 ```
-run locally:
 python 01a-crop_faces_with_mtcnn.py
 
 run on Brown department GPUs:

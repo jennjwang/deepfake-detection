@@ -5,12 +5,7 @@ import re
 from datetime import datetime
 import tensorflow as tf
 
-# import hyperparameters as hp
-# from models import YourModel, VGGModel
-# from preprocess import Datasets
 from skimage.transform import resize
-# from tensorboard_utils import \
-#         ImageLabelingLogger, ConfusionMatrixLogger, CustomModelSaver
 
 from skimage.io import imread
 from lime import lime_image
@@ -33,11 +28,6 @@ batch_size_num = 32
 def preprocess_fn(img):
     """ Preprocess function for ImageDataGenerator. """
 
-    # if self.task == '3':
-    #     img = tf.keras.applications.vgg16.preprocess_input(img)
-    # else:
-    #     img = img / 255.
-    #     img = self.standardize(img)
     img = tf.keras.applications.efficientnet.preprocess_input(img)
     return img
 
@@ -55,8 +45,6 @@ def LIME_explainer(model, path, preprocess_fn, count):
 
     # Read the image and preprocess it as before
     image = imread(path)
-    # if len(image.shape) == 2:
-    #     image = np.stack([image, image, image], axis=-1)
     image = resize(image, (128, 128, 3), preserve_range=True)
     image = preprocess_fn(image)
     
@@ -65,8 +53,6 @@ def LIME_explainer(model, path, preprocess_fn, count):
 
     explanation = explainer.explain_instance(
         image.astype('double'), model.predict)
-        # image.astype('double'), model.predict, top_labels=5, hide_color=0,
-        # num_samples=1000)
 
     # The top 5 superpixels that are most positive towards the class with the
     # rest of the image hidden
@@ -118,9 +104,6 @@ best_model.evaluate(
 )
 
 count = 1
-# path = "/home/ewang96/CS1430/Editing_CVFinal/CVFinal/complete_data/split_dataset/test/real/exseruhiuk-008-00.png"
-# path = "/home/ewang96/CS1430/Editing_CVFinal/CVFinal/complete_data/split_dataset/test/fake/aimzesksew-008-00.png" 
-#1false pos
 # 1: true fake
 # path = "/home/ewang96/CS1430/Editing_CVFinal/CVFinal/complete_data/split_dataset/test/fake/aimzesksew-005-00.png" 
 # 2: false true 

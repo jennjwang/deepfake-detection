@@ -146,6 +146,15 @@ python 05-image_grid.py
 Create a directory of images (preferably with a square number), input the filename of this directory into the images_dir variable, select a name for result_grid_filename, and run to generate a jpg file with the photos in a grid.  Used for generating result visualizations.
 
 
+#### ADDITIONAL CNN TOOL: (Step 6) - LIME Explainer
+```
+python 05-image_grid.py
+
+qsub -l day -l vf=4G -l gpus=1 -N JOBNAME_task06 run_GRID_GPU.sh 06-LIME.py -cwd
+```
+Change the variable names to the appropriate paths for your dataset, the best model saved by Step 3, and an image to analyze, and save images produced by putting this image through the LIME explainer that highlights parts of the images that contributed to the correct decision or those that made the correct decision questionable.  
+
+
 ## Authors
 
 * **Emily Wang** - [emilyaw24](https://github.com/emilyaw24)

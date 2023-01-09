@@ -2,6 +2,8 @@
 
 ## Description
 
+The rapid development of Deep Neural Networks has made the process of creating convincing deepfakes easier and faster. Deepfakes have been weaponized for malicious purposes such as for fake news, pornography, and individual humiliation. Given the strong association of faces to the identity of an individual, developing an effective deepfake detection for faces  is critical to addressing these serious privacy, security, and ethical concerns.
+
 This project is inspired by Kaggle's Deepfake Detection Challenge in collaboration with Meta.  The challenge is to create an algorithm that detects whether or not faces in a video has been altered with facial-modification technologies to create "deepfakes".  The dataset provided by Meta consisted of 115,000 videos, sourced from ~3,500 paid actors.  The dataset can be accessed by the Meta link below, or the Kaggle challenge (includes smaller packages for download).  Our implementation uses a convolutional neural network to train on the features of real and fake videos in order to generate predictions.
 
 - [Facebook Deepfake Detection Challenge (DFDC)](https://ai.facebook.com/datasets/dfdc/)

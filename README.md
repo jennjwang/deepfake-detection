@@ -161,6 +161,6 @@ Change the variable names to the appropriate paths for your dataset, the best mo
 
 * **Emily Wang** - [emilyaw24](https://github.com/emilyaw24)
 * **Hannah Jeon** - [j200183](https://github.com/j200183)
-* **Ria Rajesh** - [rrajesh1](https://github.com/rrajesh1)
 * **Jennifer Wang** - [jennjwang](https://github.com/jennjwang)
+* **Ria Rajesh** - [rrajesh1](https://github.com/rrajesh1)
 
